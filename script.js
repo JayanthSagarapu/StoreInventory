@@ -62,7 +62,7 @@ function showOnScreen(inputObject){
         //     list.removeChild(li)
         // }
 
-        buybtnUpdate()      
+        buybtnsUpdate()      
     }
 
     const buy2btn = document.createElement('button');
@@ -74,7 +74,7 @@ function showOnScreen(inputObject){
     buy2btn.onclick = (e) =>{
         inputObject.quantity = inputObject.quantity-2;
         
-        buybtnUpdate()
+        buybtnsUpdate()
     }
 
 
@@ -87,10 +87,10 @@ function showOnScreen(inputObject){
     buy1btn.onclick = () =>{
         inputObject.quantity = inputObject.quantity-1;
         
-        buybtnUpdate()
+        buybtnsUpdate()
     }
 
-    function buybtnUpdate(){
+    function buybtnsUpdate(){
         if(inputObject.quantity>0){ 
                 list.removeChild(li)
                 showOnScreen(inputObject)
