@@ -7,7 +7,7 @@ const addbtn = document.getElementById('addbtn');
 const list = document.getElementById('list')
 const listItem = document.getElementById('list-item');
 
-const obj={
+const obj= {
     item : itemname.value,
     description : description.value,
     price : price.value,
