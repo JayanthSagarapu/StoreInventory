@@ -43,6 +43,7 @@ function showOnScreen(inputObject){
     const li = document.createElement('li');
     li.className = "list-group-item align-self-center w-100 mb-1 p-1 d-block"
     li.id = "list-item"
+    li.textContent = inputObject.item +"  "+ inputObject.description +"  "+ inputObject.price +"  "+ inputObject.quantity
     
     
     const buy3btn = document.createElement('button');
@@ -50,10 +51,18 @@ function showOnScreen(inputObject){
     buy3btn.className = "btn btn-sm float-right border-dark mr-3"
     buy3btn.textContent = "Buy3";
     
+
     buy3btn.onclick = () =>{
-        inputObject.quantity = inputObject.quantity-3; 
-    
-        LiAppend()
+        inputObject.quantity = inputObject.quantity-3;
+        // if(inputObject.quantity>0){ 
+        //     list.removeChild(li)
+        //     showOnScreen(inputObject)
+        // }
+        // else{
+        //     list.removeChild(li)
+        // }
+
+        buybtnUpdate()      
     }
 
     const buy2btn = document.createElement('button');
@@ -64,7 +73,8 @@ function showOnScreen(inputObject){
 
     buy2btn.onclick = (e) =>{
         inputObject.quantity = inputObject.quantity-2;
-        LiAppend()
+        
+        buybtnUpdate()
     }
 
 
@@ -76,21 +86,31 @@ function showOnScreen(inputObject){
 
     buy1btn.onclick = () =>{
         inputObject.quantity = inputObject.quantity-1;
-        LiAppend()
-    
+        
+        buybtnUpdate()
     }
 
+    function buybtnUpdate(){
+        if(inputObject.quantity>0){ 
+                list.removeChild(li)
+                showOnScreen(inputObject)
+            }
+            else{
+                list.removeChild(li)
+                axios.delete(`https://crudcrud.com/api/1c5f91e05d944a738407fc318717e889/inventoryData/${inputObject._id}`)
+                .then((res)=>{console.log(res)})
+                .catch((err)=>{console.log(err)})
+            }
     
-    function LiAppend(){
-        li.textContent = inputObject.item +"  "+ inputObject.description +"  "+ inputObject.price +"  "+ inputObject.quantity
-        li.append(buy3btn)
-        li.append(buy2btn)
-        li.append(buy1btn)
-        list.append(li)
-    }
-    
-    LiAppend()
 
+    }
+
+
+    li.append(buy3btn)
+    li.append(buy2btn)
+    li.append(buy1btn)
+    list.append(li)
+    
     form.reset()
 
 
