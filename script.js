@@ -28,7 +28,7 @@ function postItemtoCrud(e){
     
     // showOnScreen(obj)
     
-    axios.post("https://crudcrud.com/api/1c5f91e05d944a738407fc318717e889/inventoryData",obj)
+    axios.post("https://crudcrud.com/api/cae6505e943b421e8f93fa6bf9c00e8c/inventoryData",obj)
     .then((response) => {
         showOnScreen(response.data)
         console.log(response)
@@ -42,9 +42,33 @@ function showOnScreen(inputObject){
 
     const li = document.createElement('li');
     li.className = "list-group-item align-self-center w-100 mb-1 p-1 d-block"
+    // li.className = "list-group-item align-self-center w-100 mb-1 p-1 d-block d-flex"
     li.id = "list-item"
     li.textContent = inputObject.item +"  "+ inputObject.description +"  "+ inputObject.price +"  "+ inputObject.quantity
+
+    const errmsg = document.createElement('div')
+    errmsg.className = "bg-danger w-75 d-none";
+    errmsg.textContent = "Item Insufficient";
+    list.append(errmsg)
+
     
+    // const div = document.createElement('div1');
+    // div.className="card card-body"
+    // div.textContent=inputObject.item
+    // li.append(div)
+    
+    // const div1 = document.createElement('div1');
+    // div1.className="card card-body"
+    // div1.textContent=inputObject.description
+    // li.append(div1)
+    // const div2 = document.createElement('div1');
+    // div2.className="card card-body"
+    // div2.textContent=inputObject.price
+    // li.append(div2)
+    // const div3 = document.createElement('div1');
+    // div3.className="card card-body"
+    // div3.textContent=inputObject.quantity
+    // li.append(div3)
     
     const buy3btn = document.createElement('button');
 
@@ -53,16 +77,17 @@ function showOnScreen(inputObject){
     
 
     buy3btn.onclick = () =>{
+        if(inputObject.quantity>3){
         inputObject.quantity = inputObject.quantity-3;
-        // if(inputObject.quantity>0){ 
-        //     list.removeChild(li)
-        //     showOnScreen(inputObject)
-        // }
-        // else{
-        //     list.removeChild(li)
-        // }
-
-        buybtnsUpdate()      
+        buybtnsUpdate()
+        }
+        else{
+            errmsg.className="bg-danger w-75 d-block";
+            setTimeout(()=>{
+                errmsg.className="bg-danger w-75 d-none";
+            },1000)
+        }
+  
     }
 
     const buy2btn = document.createElement('button');
@@ -72,9 +97,16 @@ function showOnScreen(inputObject){
     
 
     buy2btn.onclick = (e) =>{
-        inputObject.quantity = inputObject.quantity-2;
-        
-        buybtnsUpdate()
+        if(inputObject.quantity>2){
+            inputObject.quantity = inputObject.quantity-2;
+            buybtnsUpdate()
+            }
+            else{
+                errmsg.className="bg-danger w-75 d-block";
+                setTimeout(()=>{
+                    errmsg.className="bg-danger w-75 d-none";
+                },1000)
+            }
     }
 
 
@@ -85,9 +117,10 @@ function showOnScreen(inputObject){
     
 
     buy1btn.onclick = () =>{
-        inputObject.quantity = inputObject.quantity-1;
         
+        inputObject.quantity = inputObject.quantity-1;
         buybtnsUpdate()
+            
     }
 
     function buybtnsUpdate(){
@@ -97,14 +130,13 @@ function showOnScreen(inputObject){
             }
             else{
                 list.removeChild(li)
-                axios.delete(`https://crudcrud.com/api/1c5f91e05d944a738407fc318717e889/inventoryData/${inputObject._id}`)
+                axios.delete(`https://crudcrud.com/api/cae6505e943b421e8f93fa6bf9c00e8c/inventoryData/${inputObject._id}`)
                 .then((res)=>{console.log(res)})
                 .catch((err)=>{console.log(err)})
             }
-    
-
     }
 
+    
 
     li.append(buy3btn)
     li.append(buy2btn)
@@ -119,7 +151,7 @@ function showOnScreen(inputObject){
 window.addEventListener('DOMContentLoaded',reloadpage);
         function reloadpage(){
           axios
-          .get("https://crudcrud.com/api/1c5f91e05d944a738407fc318717e889/inventoryData")
+          .get("https://crudcrud.com/api/cae6505e943b421e8f93fa6bf9c00e8c/inventoryData")
           .then((response) => {
             for(var i=0; i< response.data.length;i++){
               showOnScreen(response.data[i])
