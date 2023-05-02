@@ -8,6 +8,7 @@ const list = document.getElementById('list')
 const listItem = document.getElementById('list-item');
 const container = document.getElementById('container')
 
+
 const Item= {
     name : itemname.value,
     description : description.value,
@@ -17,11 +18,9 @@ const Item= {
 
 
 
+addbtn.addEventListener('click',addItems);
 
-
-addbtn.addEventListener('click',postItemtoCrud);
-
-function postItemtoCrud(e){
+async function addItems(e){
      e.preventDefault();
     
      const Item= {
@@ -32,15 +31,16 @@ function postItemtoCrud(e){
     }
     
     if(Item.name && Item.description && Item.price && Item.quantity){
-        axios.post("https://crudcrud.com/api/724de6461bfc4cc9b5b1dec583330a6f/inventoryData",Item)
-        .then((response) => {
+        try{
+            const response = await axios.post("https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData",Item)
             showOnScreen(response.data)
             console.log(response)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
         }
+        catch(error){
+            console.log(error)
+        }
+    }
+    
 
     else{
         const errmsg = document.createElement('div')
@@ -55,7 +55,8 @@ function postItemtoCrud(e){
     
 }
 
-function showOnScreen(inputObject){
+
+async function showOnScreen(inputObject){
 
     const li = document.createElement('li');
     li.className = "list-group-item align-self-center w-100 mb-1 p-1 d-block d-flex"
@@ -129,12 +130,13 @@ function showOnScreen(inputObject){
     buybtn2.textContent = "Buy2";
     li.append(buybtn2)
 
-    buybtn2.onclick = () =>{
+    buybtn2.onclick = async() =>{
         if(inputObject.quantity>=2){
             inputObject.quantity = inputObject.quantity-2;
             buybtnsUpdate()
         }
         else{
+            
             errmsg.className="bg-danger w-75 d-block text-white";
             setTimeout(()=>{
             errmsg.className="bg-danger w-75 d-none";
@@ -148,7 +150,7 @@ function showOnScreen(inputObject){
     buybtn3.textContent = "Buy3";
     li.append(buybtn3)
 
-    buybtn3.onclick = () =>{
+    buybtn3.onclick = async() =>{
         if(inputObject.quantity>=3){
             inputObject.quantity = inputObject.quantity-3;
             buybtnsUpdate()
@@ -157,11 +159,12 @@ function showOnScreen(inputObject){
             errmsg.className="bg-danger w-75 d-block text-white";
             setTimeout(()=>{
             errmsg.className="bg-danger w-75 d-none";
-                },1000)            
-        }    
+            },1000)
+        }
     }
-
-    function buybtnsUpdate(){
+        
+    
+    async function buybtnsUpdate(){
         if(inputObject.quantity>0){ 
                 let updatedItem={
                     name : inputObject.name,
@@ -169,25 +172,25 @@ function showOnScreen(inputObject){
                     price : inputObject.price,
                     quantity : inputObject.quantity,
                 }
-                
-                axios.put(`https://crudcrud.com/api/724de6461bfc4cc9b5b1dec583330a6f/inventoryData/${inputObject._id}`,updatedItem)
-                .then((res)=>{
-                   
-                    div3.textContent = updatedItem.quantity 
-                   
-                })
-                .catch((error)=>{console.log(error)})
+            try{
+                const res = await axios.put(`https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData/${inputObject._id}`,updatedItem)
+                div3.textContent = updatedItem.quantity
             }
+            catch(error){
+                console.log(error)
+            }
+        }
             
-            else{
+        else{
+            try{
                 list.removeChild(li)
-                axios.delete(`https://crudcrud.com/api/724de6461bfc4cc9b5b1dec583330a6f/inventoryData/${inputObject._id}`)
-                .then((res)=>{console.log(res)})
-                .catch((err)=>{console.log(err)})
+                const res = await axios.delete(`https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData/${inputObject._id}`)
             }
+            catch(err){
+                console.log(err)
+            }
+        }
     }
-
-    
 
     
     list.append(li)
@@ -196,18 +199,18 @@ function showOnScreen(inputObject){
 }
 
 window.addEventListener('DOMContentLoaded',reloadpage);
-        function reloadpage(){
-          axios
-          .get("https://crudcrud.com/api/724de6461bfc4cc9b5b1dec583330a6f/inventoryData")
-          .then((response) => {
-            for(let i=0; i< response.data.length;i++){
-              showOnScreen(response.data[i])
-            }
-            console.log(response);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
 
-        }
+async function reloadpage(){
+    try{
+        const response = await axios.get("https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData")
+        for(let i=0; i< response.data.length;i++){
+            showOnScreen(response.data[i])
+          }
+          console.log(response);
+    }
+    catch(err){
+      console.log(err);
+    };
+
+  }
 
