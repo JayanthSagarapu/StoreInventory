@@ -16,8 +16,23 @@ const Item= {
     quantity : quantity.value,
 }
 
+window.addEventListener('DOMContentLoaded',reloadpage);
 
+async function reloadpage(){
+    try{
+        const response = await axios.get("https://crudcrud.com/api/39fd6adafb034e21ae65ec0f8e9aac64/inventoryData")
+        for(let i=0; i< response.data.length;i++){
+            showOnScreen(response.data[i])
+          }
+          console.log(response);
+    }
+    catch(err){
+      console.log(err);
+    };
 
+  }
+
+//AddingItems 
 addbtn.addEventListener('click',addItems);
 
 async function addItems(e){
@@ -32,7 +47,7 @@ async function addItems(e){
     
     if(Item.name && Item.description && Item.price && Item.quantity){
         try{
-            const response = await axios.post("https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData",Item)
+            const response = await axios.post("https://crudcrud.com/api/39fd6adafb034e21ae65ec0f8e9aac64/inventoryData",Item)
             showOnScreen(response.data)
             console.log(response)
         }
@@ -55,13 +70,15 @@ async function addItems(e){
     
 }
 
-
+//Displaying on screen
 async function showOnScreen(inputObject){
 
+    //creating list
     const li = document.createElement('li');
     li.className = "list-group-item align-self-center w-100 mb-1 p-1 d-block d-flex"
     li.id = "list-item"
 
+    //creating error
     const errmsg = document.createElement('div')
     errmsg.className = "bg-danger w-75 d-none text-white";
     errmsg.textContent = "Required Quantity Not Available";
@@ -77,10 +94,11 @@ async function showOnScreen(inputObject){
     //     li.append(div[i])
     // }
 
+    //creating Divs to store the items
     const div0 = document.createElement('div');
     div0.className="card card-body"
     div0.id="div0"
-    div0.textContent=inputObject.description
+    div0.textContent=inputObject.name
     li.append(div0) 
 
     const div1 = document.createElement('div');
@@ -102,13 +120,15 @@ async function showOnScreen(inputObject){
     li.append(div3)
 
     
+    //creating and adding eventlistner to Buy buttons
+
     const buybtn1 = document.createElement('button');
     buybtn1.className = "btn btn-sm float-right border-dark mr-3 d-block";
     buybtn1.textContent = `Buy1`;
     li.append(buybtn1)
     
 
-    buybtn1.onclick = () =>{
+    buybtn1.onclick = async() =>{
         var value = 1;
         if(inputObject.quantity>=value){
             inputObject.quantity = inputObject.quantity-1;
@@ -173,7 +193,7 @@ async function showOnScreen(inputObject){
                     quantity : inputObject.quantity,
                 }
             try{
-                const res = await axios.put(`https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData/${inputObject._id}`,updatedItem)
+                const res = await axios.put(`https://crudcrud.com/api/39fd6adafb034e21ae65ec0f8e9aac64/inventoryData/${inputObject._id}`,updatedItem)
                 div3.textContent = updatedItem.quantity
             }
             catch(error){
@@ -184,7 +204,7 @@ async function showOnScreen(inputObject){
         else{
             try{
                 list.removeChild(li)
-                const res = await axios.delete(`https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData/${inputObject._id}`)
+                const res = await axios.delete(`https://crudcrud.com/api/39fd6adafb034e21ae65ec0f8e9aac64/inventoryData/${inputObject._id}`)
             }
             catch(err){
                 console.log(err)
@@ -198,19 +218,8 @@ async function showOnScreen(inputObject){
     form.reset()
 }
 
-window.addEventListener('DOMContentLoaded',reloadpage);
 
-async function reloadpage(){
-    try{
-        const response = await axios.get("https://crudcrud.com/api/c571bf893802437999b808731f6449bb/inventoryData")
-        for(let i=0; i< response.data.length;i++){
-            showOnScreen(response.data[i])
-          }
-          console.log(response);
-    }
-    catch(err){
-      console.log(err);
-    };
+//page reload but data will not delete
 
-  }
+
 
